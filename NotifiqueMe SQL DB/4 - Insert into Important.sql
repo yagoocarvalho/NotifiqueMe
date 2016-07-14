@@ -1,0 +1,3 @@
+INSERT INTO Important(startDate, expirDate, title, shortText, longText)
+--VALUES (GETDATE(), DATEADD(DD, +7, GETDATE()), 'Eleições do CAENG', 'Não se esqueça de votar nas eleições do CAENG!', 'Não se esqueça de votar nas eleições do CAENG! A única chapa precisa do seu voto!')
+VALUES (GETDATE(), DATEADD(DD, +30, GETDATE()), 'Cardápio do Bandeijão', 'Confira aqui o cardápio do Mês do Bandeijão.', 'Segunda - Alguma Coisa/n Terça - Alguma outra Coisa/n Quarta - Algo Interessante/n Quinta - Algo Novo/n Sexta - O de sempre')

@@ -1,8 +1,0 @@
-CREATE TABLE Important (
-id INT NOT NULL IDENTITY,
-startDate DATE NOT NULL,
-expirDate DATE NOT NULL,
-title CHAR(25) NOT NULL,
-shortText CHAR(50) NOT NULL,
-longText CHAR(500) NOT NULL,
-PRIMARY KEY (id))

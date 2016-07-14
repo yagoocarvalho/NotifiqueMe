@@ -1,0 +1,1 @@
+Rode essas queries na ordem especificada no nome do arquivo no SQL Server Management Studio para criar o banco de dados de teste do aplicativo.

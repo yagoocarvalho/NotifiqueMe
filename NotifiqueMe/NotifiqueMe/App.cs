@@ -6,23 +6,22 @@ using System.Text;
 using Xamarin.Forms;
 
 namespace NotifiqueMe
-{
-	public class App : Application
+{ 
+
+    public class App : Application
 	{
+        // Current application version
+        string version = "dev0.0.1";
+
+        // Language/Translation module singleton
+        LanguageModule language = LanguageModule.Instance;
+
 		public App ()
 		{
-			// The root page of your application
-			MainPage = new ContentPage {
-				Content = new StackLayout {
-					VerticalOptions = LayoutOptions.Center,
-					Children = {
-						new Label {
-							HorizontalTextAlignment = TextAlignment.Center,
-							Text = "Welcome to Xamarin Forms!"
-						}
-					}
-				}
-			};
+            // Force a language change (for testing purposes)
+            language.ChangeLanguage(textLanguage.Portuguese);
+            // Set the main page of the application
+            MainPage = new NavigationPage(new NavPage());
 		}
 
 		protected override void OnStart ()
