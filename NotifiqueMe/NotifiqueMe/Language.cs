@@ -25,7 +25,7 @@ namespace NotifiqueMe
         public string signupText;
 
         // Initializes the LanguageModule class
-        public LanguageModule()
+        LanguageModule()
         {
             // Parse default system language and compare it to enumerated languages.
             textLanguage lang;

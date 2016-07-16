@@ -1,0 +1,14 @@
+D:\Renan\College\2016-1\Gestao do Conhecimento\NotifiqueMe\NotifiqueMe.Server\bin\Debug\NotifiqueMe.Server.exe.config
+D:\Renan\College\2016-1\Gestao do Conhecimento\NotifiqueMe\NotifiqueMe.Server\bin\Debug\NotifiqueMe.Server.exe
+D:\Renan\College\2016-1\Gestao do Conhecimento\NotifiqueMe\NotifiqueMe.Server\bin\Debug\NotifiqueMe.Server.pdb
+D:\Renan\College\2016-1\Gestao do Conhecimento\NotifiqueMe\NotifiqueMe.Server\obj\Debug\NotifiqueMe.Server.csprojResolveAssemblyReference.cache
+D:\Renan\College\2016-1\Gestao do Conhecimento\NotifiqueMe\NotifiqueMe.Server\obj\Debug\MainWindow.g.cs
+D:\Renan\College\2016-1\Gestao do Conhecimento\NotifiqueMe\NotifiqueMe.Server\obj\Debug\App.g.cs
+D:\Renan\College\2016-1\Gestao do Conhecimento\NotifiqueMe\NotifiqueMe.Server\obj\Debug\NotifiqueMe.Server_MarkupCompile.cache
+D:\Renan\College\2016-1\Gestao do Conhecimento\NotifiqueMe\NotifiqueMe.Server\obj\Debug\NotifiqueMe.Server_MarkupCompile.lref
+D:\Renan\College\2016-1\Gestao do Conhecimento\NotifiqueMe\NotifiqueMe.Server\obj\Debug\MainWindow.baml
+D:\Renan\College\2016-1\Gestao do Conhecimento\NotifiqueMe\NotifiqueMe.Server\obj\Debug\NotifiqueMe.Server.g.resources
+D:\Renan\College\2016-1\Gestao do Conhecimento\NotifiqueMe\NotifiqueMe.Server\obj\Debug\NotifiqueMe.Server.Properties.Resources.resources
+D:\Renan\College\2016-1\Gestao do Conhecimento\NotifiqueMe\NotifiqueMe.Server\obj\Debug\NotifiqueMe.Server.csproj.GenerateResource.Cache
+D:\Renan\College\2016-1\Gestao do Conhecimento\NotifiqueMe\NotifiqueMe.Server\obj\Debug\NotifiqueMe.Server.exe
+D:\Renan\College\2016-1\Gestao do Conhecimento\NotifiqueMe\NotifiqueMe.Server\obj\Debug\NotifiqueMe.Server.pdb

@@ -12,6 +12,7 @@ namespace NotifiqueMe
         private bool isLoggedIn;
         private LanguageModule language = LanguageModule.Instance;
         private NavPage instanceToReturn;
+        private ConnectivityModule serverConnection = ConnectivityModule.Instance;
 
         // Public Variables
         public string email;
@@ -214,7 +215,16 @@ namespace NotifiqueMe
             // Do user validation tasks
             // To-Do Implement validation tasks. For now just print it out.
             await DisplayAlert("Logging In", "Username: " + currUsername + "\n" + "Password (Hash): "  + encryptedPassword.ToString(), "OK");
-            isLoggedIn = true;
+            await DisplayAlert("Connecting...", "Attempting to connect to the server.", "OK");
+            if (serverConnection.startConnection())
+            {
+                await DisplayAlert("Connected to Server!", "Server connection established successfully.", "OK");
+                await DisplayAlert("Testing...", "Attempting to communicate with the server.", "OK");
+                string returnData = serverConnection.sendMessage();
+                await DisplayAlert("Success!", returnData, "OK");
+                isLoggedIn = true;
+            }
+            else await DisplayAlert("Failure.", "Could not connect to the server.", "OK");
 
             tcs.SetResult(true);
             return tcs.Task.Result;

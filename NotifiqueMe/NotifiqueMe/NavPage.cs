@@ -44,6 +44,7 @@ namespace NotifiqueMe
             int loopcount = 0;
             while (credentialsValid == true)
             {
+                
                 await DisplayAlert("Welcome!", "You are now logged in.", "OK");
                 if (loopcount < 10)
                 {
@@ -55,6 +56,7 @@ namespace NotifiqueMe
                     await DisplayAlert("Seriously!?", "You went through this " + loopcount.ToString() + " times? If you have time to do this go add something here!", "Alright, sheesh.");
                     loopcount++;
                 }
+                
 
             }
             // If credentials aren't valid call the login method.
