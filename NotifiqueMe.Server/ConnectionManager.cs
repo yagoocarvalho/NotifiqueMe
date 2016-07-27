@@ -93,7 +93,7 @@ namespace NotifiqueMe.Server
                         clientSocket = serverSocket.AcceptTcpClient();
                         // Increment the connection counter
                         connectionCount += 1;
-                        Log("New client connected. Assigned to thread #" + Convert.ToString(connectionCount) + ".");
+                        Log("New client connected. Assigned to new thread.");
                         // Initialize a new client handler to handle the new connection
                         ClientHandler client = new ClientHandler();
                         // Add the new handler to the list of active handlers

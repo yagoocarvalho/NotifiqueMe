@@ -1,4 +1,6 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 
 namespace NotifiqueMe.Server
@@ -6,6 +8,8 @@ namespace NotifiqueMe.Server
     // This class handles connections between the server program and SQL server
     class SQLConnect
     {
+        public enum Table { LoginCredentials, Important };
+
         // Constants to set up connection string. Might become statics later?
         private const string DATASOURCE = "localhost";
         private const string DBNAME = "GCAPPDB";
@@ -70,5 +74,59 @@ namespace NotifiqueMe.Server
                 Log("Connection failed to validate. Please review connection string.");
             }
         }
+
+        // Executes a select query in the SQL Database
+        // Values are returned in the same order as provided in valuesToGet
+        public List<List<string>> Select(string key, string keyValue, string[] valuesToGet, Table table)
+        {
+
+            List<List<string>> returnTable = new List<List<string>>();
+
+            Log("Building Query...");
+            string queryString = "";
+            queryString += "Select ";
+            for( int i = 0; i < valuesToGet.Length; i++ )
+            {
+                queryString += valuesToGet[i];
+                if (i != valuesToGet.Length-1) queryString += ", ";
+                else queryString += " ";
+            }
+            queryString += "from " + table.ToString() + " where " + key + " = '" + keyValue + "'";
+            Log("Query String is '" + queryString + "'");
+
+
+            Log("Executing query...");
+            SqlCommand newQuery = new SqlCommand(queryString, connection);
+
+            SqlDataReader dataReader;
+
+
+            connection.Open();
+            Log("SQL Connection Opened");
+
+            dataReader = newQuery.ExecuteReader();
+            Log("Reading data from SQL connection...");
+
+            if (dataReader.HasRows)
+            {
+                while (dataReader.Read())
+                {
+                    List<string> newRow = new List<string>(valuesToGet.Length);
+                    for (int i = 0; i < valuesToGet.Length; i++)
+                    {
+                        newRow.Add(dataReader.GetString(i));
+                        Log("Loaded " + valuesToGet[i] + " : " + newRow[i]);
+                    }
+                    returnTable.Add(newRow);
+                }
+            }
+            dataReader.Close();
+
+            connection.Close();
+            Log("SQL Connection Closed");
+
+            return returnTable;
+        }
+
     }
 }

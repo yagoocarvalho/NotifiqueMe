@@ -216,13 +216,17 @@ namespace NotifiqueMe
             // To-Do Implement validation tasks. For now just print it out.
             await DisplayAlert("Logging In", "Username: " + currUsername + "\n" + "Password (Hash): "  + encryptedPassword.ToString(), "OK");
             await DisplayAlert("Connecting...", "Attempting to connect to the server.", "OK");
-            if (serverConnection.startConnection())
+            if (serverConnection.createConnection())
             {
                 await DisplayAlert("Connected to Server!", "Server connection established successfully.", "OK");
                 await DisplayAlert("Testing...", "Attempting to communicate with the server.", "OK");
-                string returnData = serverConnection.sendMessage();
-                await DisplayAlert("Success!", returnData, "OK");
-                isLoggedIn = true;
+                bool authenticationResult = serverConnection.Authenticate(currUsername, encryptedPassword.ToString());
+                if (authenticationResult)
+                {
+                    await DisplayAlert("Success!", "You are now logged in.", "OK");
+                    isLoggedIn = true;
+                }
+                else await DisplayAlert("Login Failed", "Please review your credentials.", "OK");
             }
             else await DisplayAlert("Failure.", "Could not connect to the server.", "OK");
 

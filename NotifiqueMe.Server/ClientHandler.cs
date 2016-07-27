@@ -9,8 +9,37 @@ namespace NotifiqueMe.Server
     // This class handles communications between the server and a single client
     class ClientHandler
     {
+        enum RequestType { Authenticate };
+
+        struct Message
+        {
+            public RequestType messageType;
+            public Dictionary<string, string> elements;
+
+            // This parses a network packet into a server response
+            public Message(string content)
+            {
+                elements = new Dictionary<string, string>();
+                // Split the incoming string on every | separator
+                string[] toProcess = content.Split('|');
+                // Identify the type of response based on the first part of the string
+                messageType = (RequestType)Enum.Parse(typeof(RequestType), toProcess[0]);
+                // Parse the rest of the string
+                for (int i = 1; i < toProcess.Length; i++)
+                {
+                    // Split the current string on every = separator
+                    string[] processing = toProcess[i].Split('=');
+                    // Add the values to the dictionary
+                    elements.Add(processing[0], processing[1]);
+                }
+            }
+        }
+
         // The socket currently being used by this connection
         TcpClient clientSocket;
+
+        // The SQL connection being used by this task
+        SQLConnect sqlConnect;
 
         // The reference code to this client (unnecessary?)
         int clientCode;
@@ -52,13 +81,15 @@ namespace NotifiqueMe.Server
             }
             // Set the main interaction loop to keep running
             keepRunning = true;
+            // Create an SQL connection handler for this object to use
+            sqlConnect = new SQLConnect();
             // Create a new thread to handle server-client interaction
             clientThread = new Thread(Handle);
             // Start the thread
             clientThread.Start();
         }
 
-        // This class handles server-client interactions
+        // This method handles basic server-client interactions
         public void Handle()
         {
             // Initialize a variable to keep track of the number of requests served
@@ -88,11 +119,10 @@ namespace NotifiqueMe.Server
                         // Convert the message received from Binary to ASCII
                         dataFromClient = System.Text.Encoding.ASCII.GetString(bytesFrom);
                         // Crop the message received to the end of message marker
-                        dataFromClient = dataFromClient.Substring(0, dataFromClient.IndexOf("$"));
-                        Log("Received message from client: " + dataFromClient);
+                        dataFromClient = dataFromClient.Substring(0, dataFromClient.LastIndexOf('|'));
 
                         // Create a new response to send to the client
-                        serverResponse = "Server to client(" + clientCode + ") " + requestCount.ToString();
+                        serverResponse = HandleIncoming(dataFromClient);
                         // Convert the message from ASCII to Binary
                         sendBytes = Encoding.ASCII.GetBytes(serverResponse);
                         // Write the binary message to the network stream
@@ -113,6 +143,26 @@ namespace NotifiqueMe.Server
             clientSocket.Close();
             ReportFinished();
             Log("Client handler stopped successfully.");
+        }
+        private string HandleIncoming(string receivedString)
+        {
+            Log("Received message from client: " + receivedString);
+            Message receivedMessage = new Message(receivedString);
+            string packet = "";
+
+            switch (receivedMessage.messageType)
+            {
+                case RequestType.Authenticate:
+                    Log("Message is of type '" + receivedMessage.messageType.ToString() + "'.");
+                    Log("Building response packet...");
+                    packet += RequestType.Authenticate.ToString() + "|";
+                    packet += "success=" + Authenticate(
+                        receivedMessage.elements["username"],
+                        receivedMessage.elements["passhash"]) + "|";
+                    break;
+            }
+
+            return packet;
         }
 
         // This method stops the client handler and closes the socket it's using
@@ -142,5 +192,27 @@ namespace NotifiqueMe.Server
             // Adds a log entry to the log queue using ClientHandler# as the source
             if (verbose) { logQueue.Enqueue(new LogEntry("ClientHandler"+clientCode.ToString(), content)); }
         }
+
+        // This method authenticates a user with the database
+        private bool Authenticate(string username, string passwordHash)
+        {
+            // Create a new list to hold the result of the sql query and executes the query
+            List<List<string>> sqlResult = sqlConnect.Select(
+                "username", username,
+                new string[] { "passhash" }, 
+                SQLConnect.Table.LoginCredentials);
+
+            // If the query returned more than one user with the same username or no matching names log an error.
+            if (sqlResult.Count != 1) Log("Error: Query did not return an appropriate number of users to validate with. Number returned: " + sqlResult.Count.ToString());
+            else
+            {
+                // Otherwise, if the returned password hash and the provided hash match,
+                // confirm the authentication.
+                if (sqlResult[0][0] == passwordHash) return true;
+                else return false;
+            }
+            return false;
+        }
+
     }
 }

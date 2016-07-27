@@ -12,3 +12,5 @@ D:\Renan\College\2016-1\Gestao do Conhecimento\NotifiqueMe\NotifiqueMe.Server\ob
 D:\Renan\College\2016-1\Gestao do Conhecimento\NotifiqueMe\NotifiqueMe.Server\obj\Debug\NotifiqueMe.Server.csproj.GenerateResource.Cache
 D:\Renan\College\2016-1\Gestao do Conhecimento\NotifiqueMe\NotifiqueMe.Server\obj\Debug\NotifiqueMe.Server.exe
 D:\Renan\College\2016-1\Gestao do Conhecimento\NotifiqueMe\NotifiqueMe.Server\obj\Debug\NotifiqueMe.Server.pdb
+D:\Renan\College\2016-1\Gestao do Conhecimento\NotifiqueMe\NotifiqueMe.Server\obj\Debug\Settings.g.cs
+D:\Renan\College\2016-1\Gestao do Conhecimento\NotifiqueMe\NotifiqueMe.Server\obj\Debug\Settings.baml

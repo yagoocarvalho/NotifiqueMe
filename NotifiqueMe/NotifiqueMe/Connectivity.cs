@@ -2,8 +2,6 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Net.Sockets;
-
-using Xamarin.Forms;
 using System.Net;
 
 namespace NotifiqueMe
@@ -11,6 +9,32 @@ namespace NotifiqueMe
     // This class represents a singleton module to handle connections with the remote server.
     class ConnectivityModule
     {
+        enum RequestType { Authenticate };
+
+        struct ServerResponse
+        {
+            public RequestType responseType;
+            public Dictionary<string, string> elements;
+
+            // This parses a network packet into a server response
+            public ServerResponse(string content)
+            {
+                elements = new Dictionary<string, string>();
+                // Split the incoming string on every | separator
+                string[] toProcess = content.Split('|');
+                // Identify the type of response based on the first part of the string
+                responseType = (RequestType) Enum.Parse(typeof(RequestType), toProcess[0]);
+                // Parse the rest of the string
+                for(int i = 1; i < toProcess.Length; i++)
+                {
+                    // Split the current string on every = separator
+                    string[] processing = toProcess[i].Split('=');
+                    // Add the values to the dictionary
+                    elements.Add(processing[0], processing[1]);
+                }
+            }
+        }
+
         // Singleton class operation variables, do not touch.
         private static ConnectivityModule instance = null;
         private static readonly object padlock = new object();
@@ -35,7 +59,7 @@ namespace NotifiqueMe
         }
 
         // Method to start a connection to the server
-        public bool startConnection()
+        public bool createConnection()
         {
             try
             {
@@ -70,10 +94,10 @@ namespace NotifiqueMe
         }
 
         // Method to send a message to the server
-        public string sendMessage()
+        public string sendMessage(string message)
         {
             // If the connection isn't open, try to open it
-            if (!isConnectionOpen) startConnection();
+            if (!isConnectionOpen) createConnection();
             // If the connection failed to open, return an empty string 
             // (change this later to return an exception)
             if (!isConnectionOpen) return "";
@@ -81,7 +105,7 @@ namespace NotifiqueMe
             // Assign the socket stream to the network reading stream
             NetworkStream serverStream = clientSocket.GetStream();
             // Encode the message to send from ASCII to binary
-            byte[] outStream = Encoding.ASCII.GetBytes("Message from Client$");
+            byte[] outStream = Encoding.ASCII.GetBytes(message);
             // Write the binary message to the network stream
             serverStream.Write(outStream, 0, outStream.Length);
             // Clear the network stream to prepare for server response
@@ -93,8 +117,32 @@ namespace NotifiqueMe
             serverStream.Read(inStream, 0, clientSocket.ReceiveBufferSize);
             // Convert the message in the buffer from Binary to ASCII
             string returndata = Encoding.ASCII.GetString(inStream);
+            returndata = returndata.Substring(0, returndata.LastIndexOf('|'));
             // Return the server response string
             return returndata;
         }
+
+        public bool Authenticate(string username, string passwordHash)
+        {
+            string packet = "";
+            packet += RequestType.Authenticate.ToString() + "|";
+            packet += "username=" + username + "|";
+            packet += "passhash=" + passwordHash + "|";
+
+            ServerResponse response = new ServerResponse(sendMessage(packet));
+
+            if (response.responseType == RequestType.Authenticate)
+            {
+                if (response.elements.ContainsKey("success"))
+                {
+                    return bool.Parse(response.elements["success"]);
+                }
+                else return false;
+            }
+            else return false;
+            
+        }
     }
+
+
 }
